@@ -62,6 +62,7 @@ function SingleSellerOrderspage({ orders }: Order) {
     const revneue = await calcaluterevenuebythestartdateandenddateoforderbyId(
       e
     );
+    // @ts-ignore
     setrevenue(revneue);
   };
 
