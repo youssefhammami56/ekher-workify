@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteGigs } from "@/actions/deleteGigs"; // Adjust the path according to your project structure
+import { deleteGigs } from "@/actions/deletegigs";
 import {
   AlertDialog,
   AlertDialogDescription,
