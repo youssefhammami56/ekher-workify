@@ -1,0 +1,288 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  FREELANCER
+  ADMIN
+}
+
+model User {
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  password         String?
+  image            String?
+  username         String?
+  fullname         String?
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+  description      String?
+  profileImage     String?
+  isActive         Boolean   @default(true)
+  isProfileInfoset Boolean   @default(false)
+  emailVerified    DateTime? @default(now())
+  role             Role      @default(CLIENT)
+  Gigs             Gigs[]
+  Reviews          Reviews[]
+  myOrders         Orders[]  @relation("buyer")
+  orders           Orders[]  @relation("seller")
+
+  sentMessages        Message[]        @relation("sentMessages")
+  receivedMessages    Message[]        @relation("receivedMessages")
+  Job                 Job[]
+  JobApplications     JobApplication[]
+  Post                Post[]
+  PostResponse        PostResponse[]
+  Notifications       Notifications[]
+  Contarctasfrelencer Contarct[]       @relation("frellencer")
+
+  Contarctasclient Contarct[] @relation("client")
+  origin           Origin?
+  filier           String?
+  about            String?
+  DateOfBirth      DateTime?
+  subtitle         String?
+  linkedin         String?
+  twitter          String?
+  github           String?
+  patiants         String[]
+
+  report   Report[]  @relation("userId")
+  reported Report[]  @relation("reportedUserId")
+  Account  Account[]
+}
+
+model Origin {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  value  String
+  label  String
+  flag   String
+  region String
+  lalng  Int[]
+}
+
+model Gigs {
+  id           String    @id @default(cuid())
+  title        String
+  description  String
+  category     String
+  deliveryTime Int
+  revisions    Int
+  features     String[]
+  price        Int
+  shortDesc    String
+  createdAt    DateTime  @default(now())
+  images       String[]
+  userId       String
+  createdBy    User      @relation(fields: [userId], references: [id])
+  Reviews      Reviews[]
+  Orders       Orders[]
+}
+
+model Orders {
+  id String @id @default(cuid())
+
+  createdAt   DateTime  @default(now())
+  buyer       User      @relation("buyer", fields: [buyerId], references: [id])
+  buyerId     String
+  seller      User      @relation("seller", fields: [sellerId], references: [id])
+  sellerId    String
+  status      String    @default("pending")
+  // paymentIntent String    @unique
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  startedAt   DateTime?
+  gig         Gigs      @relation(fields: [gigId], references: [id])
+  gigId       String
+  price       Int
+  messages    Message[]
+}
+
+model Reviews {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  rating     Int
+  reviewText String?
+  gigId      String
+  gig        Gigs     @relation(fields: [gigId], references: [id])
+
+  reviewer   User   @relation(fields: [reviewerId], references: [id])
+  reviewerId String
+}
+
+model Message {
+  id               String          @id @default(cuid())
+  text             String
+  createdAt        DateTime        @default(now())
+  isRead           Boolean         @default(false)
+  sender           User            @relation("sentMessages", fields: [senderId], references: [id])
+  senderId         String
+  recipient        User            @relation("receivedMessages", fields: [recipientId], references: [id])
+  recipientId      String
+  order            Orders?         @relation(fields: [orderId], references: [id])
+  orderId          String?
+  jobapplication   JobApplication? @relation(fields: [jobApplicationId], references: [id])
+  jobApplicationId String?
+  fileUrl          String?         @default("")
+  fileName         String?         @default("")
+}
+
+model Job {
+  id           String           @id @default(cuid())
+  title        String
+  description  String
+  category     String
+  price        Int
+  imagesrc     String?
+  shortDesc    String?
+  createdAt    DateTime         @default(now())
+  userId       String
+  createdBy    User             @relation(fields: [userId], references: [id])
+  isCompleted  Boolean          @default(false)
+  expertise    String[]
+  applications JobApplication[]
+}
+
+model JobApplication {
+  id     String @id @default(cuid())
+  jobId  String
+  job    Job    @relation(fields: [jobId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt  DateTime   @default(now())
+  isAccepted Boolean    @default(false)
+  status     String?    @default("pending")
+  messages   Message[]
+  Contarct   Contarct[]
+}
+
+model Community {
+  id       String  @id @default(uuid())
+  title    String
+  category String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+}
+
+model Post {
+  id String @id @default(uuid())
+
+  content  String
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+  imageUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  communityId  String
+  community    Community      @relation(fields: [communityId], references: [id])
+  PostResponse PostResponse[]
+}
+
+model PostResponse {
+  id String @id @default(uuid())
+
+  content  String?
+  userId   String?
+  user     User?   @relation(fields: [userId], references: [id])
+  imageUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id])
+}
+
+model Notifications {
+  id String @id @default(uuid())
+
+  userID        String
+  user          User    @relation(fields: [userID], references: [id])
+  message       String
+  distinationId String?
+
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+}
+
+model Contarct {
+  id               String         @id @default(uuid())
+  jobApplicationId String
+  jobApplication   JobApplication @relation(fields: [jobApplicationId], references: [id])
+  freelancerId     String
+  freelancer       User           @relation("frellencer", fields: [freelancerId], references: [id])
+  clientId         String
+  client           User           @relation("client", fields: [clientId], references: [id])
+  title            String
+  description      String
+  price            Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model VerificationToken {
+  id      String   @id @default(uuid())
+  email   String
+  token   String
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(uuid())
+  email   String
+  token   String
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Report {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation("userId", fields: [userId], references: [id])
+  reportedUserId String
+  reportedUser   User     @relation("reportedUserId", fields: [reportedUserId], references: [id])
+  reason         String
+  createdAt      DateTime @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
