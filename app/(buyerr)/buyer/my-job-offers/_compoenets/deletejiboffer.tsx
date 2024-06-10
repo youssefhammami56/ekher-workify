@@ -1,6 +1,5 @@
 "use client";
 
-import { deletegigs } from "@/actions/deletegigs";
 import { deletejoboffer } from "@/actions/deletejoboffer";
 import {
   AlertDialog,
