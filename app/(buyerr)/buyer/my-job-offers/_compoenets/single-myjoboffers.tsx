@@ -8,6 +8,7 @@ import { FaFilter } from "react-icons/fa";
 import { DeeleteJoboffer } from "./deletejiboffer";
 import { useRouter } from "next/navigation";
 import { categories } from "@/utils/categories";
+import { getMyjobOffers } from "@/actions/get-myjoboffers";
 
 interface JobOffers {
   Jobs: Awaited<ReturnType<typeof getMyjobOffers>>;
