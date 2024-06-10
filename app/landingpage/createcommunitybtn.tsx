@@ -104,7 +104,7 @@ export function DialogDemo() {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleCreateCommunity} variant={"blue"}>
+          <Button onClick={handleCreateCommunity} variant={"primary"}>
             Save
           </Button>
         </DialogFooter>
