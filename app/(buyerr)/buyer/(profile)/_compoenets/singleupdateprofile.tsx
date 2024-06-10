@@ -14,6 +14,7 @@ import { getLoggedUser } from "@/actions/getloggeduser";
 import { FillInformation } from "@/actions/fill-information";
 import { toast, Toaster } from "react-hot-toast";
 import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from 'react-datepicker';
 
 interface SingleUpdateProfileProps {
   user: Awaited<ReturnType<typeof getLoggedUser>>;
