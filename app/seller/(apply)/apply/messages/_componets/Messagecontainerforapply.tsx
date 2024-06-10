@@ -29,10 +29,12 @@ function Messagecontainerforapply({
   function formatTime(timestamp: any) {
     const date = new Date(timestamp);
     let hours = date.getHours();
+    //@ts-ignore
     let minutes = date.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
     hours %= 12;
     hours = hours || 12;
+    // @ts-ignore
     minutes = minutes < 10 ? `0${minutes}` : minutes;
     const formattedTime = `${hours}:${minutes} ${ampm}`;
     return formattedTime;
