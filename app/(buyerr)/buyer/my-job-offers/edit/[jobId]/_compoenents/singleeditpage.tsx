@@ -8,7 +8,7 @@ import UploadImagewithcloudinar from "@/app/(sellerr)/_componenets/UploadImagewi
 
 import { useRouter } from "next/navigation";
 
-function SingleJobofferEdit({ job }) {
+function SingleJobofferEdit({ job }:any) {
   const inputClassName =
     "block p-4 w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500";
   const labelClassName =
@@ -23,8 +23,9 @@ function SingleJobofferEdit({ job }) {
 
   const [singleFeature, setSingleFeature] = useState("");
   const router = useRouter();
-
+{/* @ts-ignore */}
   const handleChange = (e) => {};
+  {/* @ts-ignore */}
   const removeFeature = (index) => {};
   const handleUpdate = async () => {
     await editJobOffer(job?.id!, title, description, category, price, features, shortDesc);
@@ -117,6 +118,7 @@ function SingleJobofferEdit({ job }) {
                 </button>
               </div>
               <ul className="flex gap-2 flex-wrap">
+                {/* @ts-ignore */}
                 {features.map((feature, index) => (
                   <li
                     key={index}
